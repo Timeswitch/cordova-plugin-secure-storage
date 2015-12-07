@@ -27,7 +27,7 @@ public class RSA {
 	}
 
 	public static void createKeyPair(Context ctx, String alias) throws Exception {
-		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance("RSA", KEYSTORE_PROVIDER);
+		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance("RSA");
 		kpGenerator.initialize(2048);
 		kpGenerator.generateKeyPair();
 	}
