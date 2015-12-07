@@ -3,8 +3,6 @@ package com.crypho.plugins;
 import android.content.Context;
 import android.util.Log;
 
-import android.security.KeyPairGeneratorSpec;
-
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyPairGenerator;
@@ -29,22 +27,8 @@ public class RSA {
 	}
 
 	public static void createKeyPair(Context ctx, String alias) throws Exception {
-		Calendar notBefore = Calendar.getInstance();
-		Calendar notAfter = Calendar.getInstance();
-		notAfter.add(Calendar.YEAR, 100);
-		String principalString = String.format("CN=%s, OU=%s", alias, ctx.getPackageName());
-		KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(ctx)
-			.setAlias(alias)
-			.setSubject(new X500Principal(principalString))
-			.setSerialNumber(BigInteger.ONE)
-			.setStartDate(notBefore.getTime())
-			.setEndDate(notAfter.getTime())
-			.setEncryptionRequired()
-			.setKeySize(2048)
-			.setKeyType("RSA")
-			.build();
 		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance("RSA", KEYSTORE_PROVIDER);
-		kpGenerator.initialize(spec);
+		kpGenerator.initialize(2048);
 		kpGenerator.generateKeyPair();
 	}
 
