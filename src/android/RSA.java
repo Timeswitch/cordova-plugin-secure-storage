@@ -1,69 +1,16 @@
 package com.crypho.plugins;
 
-import android.content.Context;
-import android.util.Log;
-
-import java.math.BigInteger;
-import java.security.Key;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.util.Calendar;
-
 import javax.crypto.Cipher;
-import javax.security.auth.x500.X500Principal;
 
-public class RSA {
-	private static final String KEYSTORE_PROVIDER = "AndroidKeyStore";
-	private static final String CIPHER = "RSA/ECB/PKCS1Padding";
+public interface RSA {
 
-	public static byte[] encrypt(byte[] buf, String alias) throws Exception {
-		Cipher cipher = createCipher(Cipher.ENCRYPT_MODE, alias);
-		return cipher.doFinal(buf);
-	}
+	public byte[] encrypt(byte[] buf, String alias) throws Exception;
 
-	public static byte[] decrypt(byte[] encrypted, String alias) throws Exception {
-		Cipher cipher = createCipher(Cipher.DECRYPT_MODE, alias);
-		return cipher.doFinal(encrypted);
-	}
+	public byte[] decrypt(byte[] encrypted, String alias) throws Exception;
 
-	public static void createKeyPair(Context ctx, String alias) throws Exception {
-		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance("RSA");
-		kpGenerator.initialize(2048);
-		kpGenerator.generateKeyPair();
-	}
+	public void createKeyPair(String alias) throws Exception;
 
-	public static Cipher createCipher(int cipherMode, String alias) throws Exception {
-		KeyStore.PrivateKeyEntry keyEntry = getKeyStoreEntry(alias);
-		if (keyEntry == null) {
-			throw new Exception("Failed to load key for " + alias);
-		}
-		Key key;
-		switch (cipherMode) {
-            case Cipher.ENCRYPT_MODE:
-                key = keyEntry.getCertificate().getPublicKey();
-                break;
-			case  Cipher.DECRYPT_MODE:
-				key = keyEntry.getPrivateKey();
-				break;
-			default : throw new Exception("Invalid cipher mode parameter");
-		}
-		Cipher cipher = Cipher.getInstance(CIPHER);
-		cipher.init(cipherMode, key);
-		return cipher;
-	}
+	public Cipher createCipher(int cipherMode, String alias) throws Exception;
 
-
-	public static boolean isEntryAvailable(String alias) {
-		try {
-			return getKeyStoreEntry(alias) != null;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	private static KeyStore.PrivateKeyEntry getKeyStoreEntry(String alias) throws Exception {
-		KeyStore keyStore = KeyStore.getInstance(KEYSTORE_PROVIDER);
-		keyStore.load(null, null);
-		return (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias, null);
-	}
+	public boolean isEntryAvailable(String alias);
 }
