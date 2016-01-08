@@ -28,11 +28,7 @@ public class SecureStorage extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        if (Build.VERSION.SDK_INT >= 18) {
-            this.rsa = new RSAKeyStore(getContext());
-        } else {
-            this.rsa = new RSASharedPreferences(getContext());
-        }
+        this.rsa = new RSASharedPreferences(getContext());
     }
 
     @Override
@@ -64,17 +60,12 @@ public class SecureStorage extends CordovaPlugin {
             ALIAS = getContext().getPackageName() + "." + args.getString(0);
             if (!rsa.isEntryAvailable(ALIAS)) {
                 initContext = callbackContext;
-
-                if (Build.VERSION.SDK_INT >= 18){
-                    unlockCredentials();
-                }else{
-                    try{
-                        rsa.createKeyPair(ALIAS);
-                        callbackContext.success();
-                    }catch (Exception e){
-                        Log.e(TAG, "Init failed :", e);
-                        initContext.error(e.getMessage());
-                    }
+                try{
+                    rsa.createKeyPair(ALIAS);
+                    callbackContext.success();
+                }catch (Exception e){
+                    Log.e(TAG, "Init failed :", e);
+                    initContext.error(e.getMessage());
                 }
             } else {
                 callbackContext.success();
