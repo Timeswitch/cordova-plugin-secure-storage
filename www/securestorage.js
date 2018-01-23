@@ -148,7 +148,7 @@ var SecureStorage;
 switch(cordova.platformId) {
 
     case 'ios':
-        SecureStorage = SecureStorageAndroid;
+        SecureStorage = SecureStorageBrowser;
         break;
 
     case 'android':
